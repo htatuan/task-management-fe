@@ -1,17 +1,7 @@
 "use client";
 import React, { FormEvent } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-
-import { useQuery } from "react-query";
-import { GraphQLClient, gql } from "graphql-request";
-
-const API_URL = `http://localhost:3000/graphql`;
-
-const graphQLClient = new GraphQLClient(API_URL, {
-  // headers: {
-  //   Authorization: `Bearer ${process.env.API_KEY}`
-  // }
-});
+import { useLogin } from "@/app/services/useRequest";
 
 const LoginForm = () => {
   const {
@@ -21,19 +11,12 @@ const LoginForm = () => {
   } = useForm<InputLoginForm>();
   const onSubmitLoginForm: SubmitHandler<InputLoginForm> = (dataForm) => {
     console.log(dataForm);
-    // const res = useQuery(["login", dataForm.username, dataForm.password], async () => {
-    //   return await graphQLClient.request(
-    //     gql`
-    //     query{
-    //       login(username: $username, password:$password){
-    //         username,accessToken
-    //       }
-    //     }
-    //     `
-    //   );
-    // });
+    const { data, error, isLoading, isSuccess } = useLogin(
+      dataForm.username,
+      dataForm.password
+    );
 
-    // console.log("res=> ",res)
+    console.log("res=> ", data);
   };
 
   return (
