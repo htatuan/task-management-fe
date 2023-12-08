@@ -13,6 +13,7 @@ export function RegisterForm(): React.ReactElement {
     (variables: { username: string; password: string }) =>
       useRegister(variables.username, variables.password)
   );
+  
   const {
     form: { formState, register, reset, handleSubmit: handleSubmit },
     isError,
