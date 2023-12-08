@@ -5,20 +5,20 @@ import { useMutation } from "react-query";
 import { useRegister } from "@/app/services/useRequest";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useFormSchema } from "./useFormSchema";
 
-const RegisterForm = () => {
+export function RegisterForm(): React.ReactElement {
   const { push } = useRouter();
   const { mutate } = useMutation(
     (variables: { username: string; password: string }) =>
       useRegister(variables.username, variables.password)
   );
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<InputLoginForm>();
+    form: { formState, register, reset, handleSubmit: handleSubmit },
+    isError,
+    getErrorMessage,
+  } = useFormSchema();
   const onSubmitRegisterForm: SubmitHandler<InputLoginForm> = (dataForm) => {
-    console.log(dataForm);
     mutate(
       { username: dataForm.username, password: dataForm.password },
       {
@@ -43,15 +43,17 @@ const RegisterForm = () => {
           Username
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+            isError("username") ? "border-red-400" : ""
+          }`}
           type="text"
           placeholder="Username"
           {...register("username", { required: true })}
         />
-        {errors.username && (
-          <p className="text-red-500 text-xs italic">
-            Please choose a username.
-          </p>
+        {isError("username") && (
+          <span className="text-red-400 text-sm">
+            {getErrorMessage("username")}
+          </span>
         )}
       </div>
       <div className="mb-6">
@@ -59,19 +61,22 @@ const RegisterForm = () => {
           Password
         </label>
         <input
-          className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          className={`shadow appearance-none border  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${
+            isError("password") ? "border-red-400" : ""
+          }`}
           type="password"
           placeholder="Password"
-          {...register("password", { required: true })}
+          {...register("password")}
         />
-        {errors.password && (
-          <p className="text-red-500 text-xs italic">
-            Please choose a password.
-          </p>
+        {isError("password") && (
+          <span className={"text-red-400 text-sm"}>
+            {getErrorMessage("password")}
+          </span>
         )}
       </div>
       <div className="flex items-center justify-between">
         <button
+          disabled={formState.isSubmitting}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           type="submit"
         >
@@ -86,6 +91,4 @@ const RegisterForm = () => {
       </div>
     </form>
   );
-};
-
-export default RegisterForm;
+}

@@ -1,5 +1,5 @@
-import React from 'react'
-import RegisterForm from './form'
+import React from "react";
+import { RegisterForm } from "./form";
 
 const RegisterPage = () => {
   return (
@@ -12,7 +12,7 @@ const RegisterPage = () => {
         <RegisterForm />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default RegisterPage
+export default RegisterPage;
