@@ -12,11 +12,13 @@ const RegisterForm = () => {
     (variables: { username: string; password: string }) =>
       useRegister(variables.username, variables.password)
   );
+  
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<InputLoginForm>();
+
   const onSubmitRegisterForm: SubmitHandler<InputLoginForm> = (dataForm) => {
     console.log(dataForm);
     mutate(
@@ -59,7 +61,7 @@ const RegisterForm = () => {
           Password
         </label>
         <input
-          className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
           type="password"
           placeholder="Password"
           {...register("password", { required: true })}
