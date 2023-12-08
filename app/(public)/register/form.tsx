@@ -1,19 +1,17 @@
 "use client";
-import React, { FormEvent } from "react";
+import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-
-import { useQuery } from "react-query";
-import { GraphQLClient, gql } from "graphql-request";
-
-const API_URL = `http://localhost:3000/graphql`;
-
-const graphQLClient = new GraphQLClient(API_URL, {
-  // headers: {
-  //   Authorization: `Bearer ${process.env.API_KEY}`
-  // }
-});
+import { useMutation } from "react-query";
+import { useRegister } from "@/app/services/useRequest";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const RegisterForm = () => {
+  const { push } = useRouter();
+  const { mutate } = useMutation(
+    (variables: { username: string; password: string }) =>
+      useRegister(variables.username, variables.password)
+  );
   const {
     register,
     handleSubmit,
@@ -21,19 +19,18 @@ const RegisterForm = () => {
   } = useForm<InputLoginForm>();
   const onSubmitRegisterForm: SubmitHandler<InputLoginForm> = (dataForm) => {
     console.log(dataForm);
-    // const res = useQuery(["login", dataForm.username, dataForm.password], async () => {
-    //   return await graphQLClient.request(
-    //     gql`
-    //     query{
-    //       login(username: $username, password:$password){
-    //         username,accessToken
-    //       }
-    //     }
-    //     `
-    //   );
-    // });
-
-    // console.log("res=> ",res)
+    mutate(
+      { username: dataForm.username, password: dataForm.password },
+      {
+        onSuccess: () => {
+          console.log("success");
+          push("/login");
+        },
+        onError: (errors) => {
+          console.log("error=> ", errors);
+        },
+      }
+    );
   };
 
   return (
@@ -80,12 +77,12 @@ const RegisterForm = () => {
         >
           Register
         </button>
-        <a
+        <Link
+          href="/login"
           className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-          href="#"
         >
           Login
-        </a>
+        </Link>
       </div>
     </form>
   );

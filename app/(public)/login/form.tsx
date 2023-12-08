@@ -1,22 +1,71 @@
 "use client";
-import React, { FormEvent } from "react";
+import React, { FormEvent, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useLogin } from "@/app/services/useRequest";
+import { useQuery, useMutation } from "react-query";
+import { GraphQLClient, gql } from "graphql-request";
+import Link from "next/link";
 
 const LoginForm = () => {
+  const [enabled, setEnabled] = useState(false);
+  const API_URL = `http://localhost:3000/graphql`;
+
+  const graphQLClient = new GraphQLClient(API_URL, {
+    headers: {
+      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFuaHR1YW4iLCJpYXQiOjE3MDE5NDIyMzksImV4cCI6MTcwMTk0NTgzOX0.UmRLkw-Il63rKUNJdwthyiSv3Z4N5slImW1Xt6eYblU`,
+    },
+  });
+
+  const UserQuery = gql`
+    query {
+      findAllTasks(ownerId: 1) {
+        id
+        title
+        status
+        ownerId
+      }
+    }
+  `;
+
+  const fetchUser = async () => {
+    return await graphQLClient.request(UserQuery);
+  };
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<InputLoginForm>();
+
+  const test = () => {
+    const { isLoading, data } = useQuery(["get-user"], fetchUser,{ enabled: false });
+    console.log("data => ", data);
+
+    return data;
+  };
+
+  const { isLoading, data } = useQuery(["get-user"], fetchUser,{
+    enabled: enabled
+  });
+  console.log("data333333 => ", data);
   const onSubmitLoginForm: SubmitHandler<InputLoginForm> = (dataForm) => {
     console.log(dataForm);
-    const { data, error, isLoading, isSuccess } = useLogin(
-      dataForm.username,
-      dataForm.password
-    );
-
-    console.log("res=> ", data);
+    //setEnabled(true)
+    const { isLoading, data } = useMutation(["get-user"], fetchUser);
+    console.log("data => ", data);
+    // const { isLoading, data } = useQuery(["login"], async () => {
+    //   return await graphQLClient.request(
+    //     gql`
+    //       query {
+    //         login(username: $username, password: $password) {
+    //           username
+    //           accessToken
+    //         }
+    //       }
+    //     `
+    //   );
+    // });
+    // const data = test();
+    // console.log("data => ", data);
   };
 
   return (
@@ -63,12 +112,7 @@ const LoginForm = () => {
         >
           Sign In
         </button>
-        <a
-          className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-          href="#"
-        >
-          Forgot Password?
-        </a>
+        <Link href="/register" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">Register</Link>
       </div>
     </form>
   );
