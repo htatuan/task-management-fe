@@ -6,6 +6,8 @@ import CustomModal from "./task/components/add-new-task-modal";
 import { TaskModel } from "./task/components/task.model";
 
 const Homepage = () => {
+  const session = await getServerSession(authOptions);
+  console.log("sesss=> ", session);
   const tasks: TaskModel[] = [
     { id: 1, status: "InProgress", title: "Tuan" },
     { id: 2, status: "Todo", title: "Huy" },

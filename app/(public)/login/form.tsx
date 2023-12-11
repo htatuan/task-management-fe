@@ -4,10 +4,13 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation } from "react-query";
 import Link from "next/link";
 import { useLogin } from "@/app/services/useRequest";
-import { useRouter } from "next/navigation";
+import {signIn} from "next-auth/react";
+import { useSearchParams, useRouter } from "next/navigation";
 
 const LoginForm = () => {
   const { push } = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
   const { mutate } = useMutation(
     (variables: { username: string; password: string }) =>
       useLogin(variables.username, variables.password)
@@ -19,20 +22,34 @@ const LoginForm = () => {
     formState: { errors },
   } = useForm<InputLoginForm>();
 
-  const onSubmitLoginForm: SubmitHandler<InputLoginForm> = (dataForm) => {
+  const onSubmitLoginForm: SubmitHandler<InputLoginForm> = async (dataForm) => {
     console.log(dataForm);
-    mutate(
-      { username: dataForm.username, password: dataForm.password },
-      {
-        onSuccess: () => {
-          console.log("success");
-          push("/");
-        },
-        onError: (errors) => {
-          console.log("error=> ", errors);
-        },
-      }
-    );
+    // mutate(
+    //   { username: dataForm.username, password: dataForm.password },
+    //   {
+    //     onSuccess: (res) => {
+    //       console.log("success", res.login.accessToken);
+    //       //push("/");
+    //     },
+    //     onError: (errors) => {
+    //       console.log("error=> ", errors);
+    //     },
+    //   }
+    // );
+    const res = await signIn("credentials", {
+      redirect: false,
+      username: dataForm.username,
+      password: dataForm.password,
+      callbackUrl,
+    });
+
+    console.log("resssssss=> ", res)
+
+    if (!res?.error) {
+      push(callbackUrl);
+    } else {
+      console.log("error")
+    }
   };
 
 
@@ -46,7 +63,7 @@ const LoginForm = () => {
           Username
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-2 leading-tight focus:outline-none focus:shadow-outline"
           type="text"
           placeholder="Username"
           {...register("username", { required: true })}
@@ -62,7 +79,7 @@ const LoginForm = () => {
           Password
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-2 leading-tight focus:outline-none focus:shadow-outline"
           type="password"
           placeholder="Password"
           {...register("password", { required: true })}
