@@ -45,7 +45,7 @@ const RegisterForm = () => {
           Username
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-2 leading-tight focus:outline-none focus:shadow-outline"
           type="text"
           placeholder="Username"
           {...register("username", { required: true })}
@@ -61,7 +61,7 @@ const RegisterForm = () => {
           Password
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-2 leading-tight focus:outline-none focus:shadow-outline"
           type="password"
           placeholder="Password"
           {...register("password", { required: true })}

@@ -4,7 +4,7 @@ import graphQLClient from "./useGraphQL";
 export const useRegister = async (
   username: string,
   password: string
-): Promise<string> => {
+): Promise<any> => {
   return await graphQLClient.request(
     gql`
       mutation {
@@ -22,14 +22,15 @@ export const useRegister = async (
 export const useLogin = async (
   username: string,
   password: string
-): Promise<string> => {
+): Promise<any> => {
   return await graphQLClient.request(
     gql`
       mutation {
         login(
           credentials:{username:"${username}", password:"${password}"}
         ) {
-          username
+          username,
+          accessToken
         }
       }
     `,
