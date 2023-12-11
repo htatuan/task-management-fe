@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import SearchForm from "./task/components/search-form";
 import TaskList from "./task/components/task-list";
 import AddTask from "./task/components/add-task";
-import CustomModal from "./task/components/add-new-task-modal";
 import { TaskModel } from "./task/components/task.model";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
 
-const Homepage = () => {
+const Homepage = async () => {
   const session = await getServerSession(authOptions);
   console.log("sesss=> ", session);
   const tasks: TaskModel[] = [
