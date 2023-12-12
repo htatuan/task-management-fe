@@ -9,11 +9,6 @@ import { ApiResponse } from "./api.response";
 
 const TaskManagement = () => {
   const { data, error, isLoading } = useGetAllTask(1);
-  const tasks: TaskModel[] = [
-    { id: 1, status: "InProgress", title: "Tuan" },
-    { id: 2, status: "Todo", title: "Huy" },
-    { id: 3, status: "Done", title: "Bao" },
-  ];
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -26,9 +21,9 @@ const TaskManagement = () => {
         <AddTask />
       </div>
 
-      <div className="mt-5">
+      {/* <div className="mt-5">
         <SearchForm />
-      </div>
+      </div> */}
 
       <div className="mt-5">
         <TaskList tasks={responseData.data} />
