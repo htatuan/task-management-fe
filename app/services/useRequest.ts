@@ -1,3 +1,4 @@
+"use client";
 import { gql } from "graphql-request";
 import callApi from "./useGraphQL";
 import { useQuery } from "react-query";
@@ -56,7 +57,6 @@ export const useFetchAllTasks = async (id: number): Promise<any> => {
 };
 
 export function useGetAllTask(id: number) {
-  console.log("1");
   return useQuery("getAllTasks", () => {
     const allTasks = callApi().request(gql`
       query {

@@ -1,4 +1,4 @@
-//"use client";
+"use client";
 import React from "react";
 import AddTask from "./add-task";
 import SearchForm from "./search-form";
@@ -14,8 +14,7 @@ const TaskManagement = () => {
     { id: 2, status: "Todo", title: "Huy" },
     { id: 3, status: "Done", title: "Bao" },
   ];
-  console.log("a");
-  //console.log(data.data.findAllTasks[0]);
+
   return (
     <>
       <div className="text-right mt-5">
