@@ -59,6 +59,24 @@ export const useForgotPassword = async (email: string): Promise<any> => {
   );
 };
 
+export const useResetPassword = async (
+  forgotPasswordToken: string,
+  password: string
+): Promise<any> => {
+  return await callApi().request(
+    gql`
+      mutation {
+        resetPassword(
+          resetPasswordInput:{forgotPasswordToken:"${forgotPasswordToken}", password: "${password}"}
+        ) {
+          message
+        }
+      }
+    `,
+    { forgotPasswordToken, password }
+  );
+};
+
 export const useFetchAllTasks = async (id: number): Promise<any> => {
   return await callApi().request(
     gql`

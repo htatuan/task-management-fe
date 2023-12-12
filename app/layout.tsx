@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ReactQueryProvider } from "./react-query-provider";
 import { NextAuthProvider } from "./providers";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import 'react-responsive-modal/styles.css';
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,7 +24,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <div className="container mx-auto">
           <ReactQueryProvider>
-            <NextAuthProvider>{children}</NextAuthProvider>
+            <NextAuthProvider>
+              {children}
+              <ToastContainer />
+            </NextAuthProvider>
           </ReactQueryProvider>
         </div>
       </body>
