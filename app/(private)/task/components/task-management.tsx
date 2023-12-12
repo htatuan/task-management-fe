@@ -4,8 +4,7 @@ import AddTask from "./add-task";
 import SearchForm from "./search-form";
 import TaskList from "./task-list";
 import { TaskModel } from "./task.model";
-
-import { useFetchAllTasks, useGetAllTask } from "@/app/services/useRequest";
+import { useGetAllTask } from "@/app/services/useRequestClient";
 
 const TaskManagement = () => {
   const { data, error, isLoading } = useGetAllTask(1);
@@ -14,7 +13,7 @@ const TaskManagement = () => {
     { id: 2, status: "Todo", title: "Huy" },
     { id: 3, status: "Done", title: "Bao" },
   ];
-
+  console.log(data);
   return (
     <>
       <div className="text-right mt-5">
