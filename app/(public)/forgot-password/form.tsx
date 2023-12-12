@@ -1,38 +1,45 @@
 "use client";
 import React from "react";
-import { SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation } from "react-query";
 import Link from "next/link";
 import { useFormSchema } from "../register/useFormSchema";
 import { useForgotPassword } from "@/app/services/useRequest";
+import { toast } from "react-toastify";
 
 const ForgotPasswordForm = () => {
-  // const { mutate } = useMutation((variables: { email: string }) =>
-  //   useForgotPassword(variables.email)
-  // );
+  const { mutate } = useMutation((variables: { email: string }) =>
+    useForgotPassword(variables.email)
+  );
 
   const {
-    form: { register, handleSubmit: handleSubmit },
-    isError,
-    getErrorMessage,
-  } = useFormSchema();
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<{ email: string }>();
   const onSubmitForgotPasswordForm: SubmitHandler<{ email: string }> = (
     dataForm
   ) => {
     console.log(dataForm);
-    // mutate(
-    //   {
-    //     email: dataForm.email,
-    //   },
-    //   {
-    //     onSuccess: () => {
-    //       console.log("success");
-    //     },
-    //     onError: (errors) => {
-    //       console.log("error=> ", errors);
-    //     },
-    //   }
-    // );
+    mutate(
+      {
+        email: dataForm.email,
+      },
+      {
+        onSuccess: () => {
+          console.log(1);
+          toast.warn(
+            "Your forgot password request has been sent to your email!",
+            {
+              position: toast.POSITION.TOP_CENTER,
+            }
+          );
+        },
+        onError: (errors) => {
+          console.log("error=> ", errors);
+        },
+      }
+    );
   };
 
   return (
@@ -45,17 +52,13 @@ const ForgotPasswordForm = () => {
           Enter your Email
         </label>
         <input
-          className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-            isError("email") ? "border-red-400" : ""
-          }`}
+          className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
           type="text"
-          placeholder="email"
+          placeholder="Email"
           {...register("email", { required: true })}
         />
-        {isError("email") && (
-          <span className="text-red-400 text-sm">
-            {getErrorMessage("email")}
-          </span>
+        {errors.email && (
+          <p className="text-red-500 text-xs italic">Please fill an email.</p>
         )}
       </div>
       <div className="flex flex-col w-full gap-1">
