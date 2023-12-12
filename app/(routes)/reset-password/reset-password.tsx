@@ -60,7 +60,7 @@ const ResetPassword = ({
             toast.success("Password updated successfully!", {
               position: toast.POSITION.TOP_CENTER,
             });
-            push("/login")
+            push("/login");
           },
           onError: (errors) => {
             console.log("error=> ", errors);
@@ -74,18 +74,21 @@ const ResetPassword = ({
 
   return (
     <div className="w-full flex justify-center items-center h-screen">
-      <div className="md:w-[500px] w-full">
-        <h1 className={``}>Reset Your Password</h1>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="w-full mt-5 relative mb-1">
-            <label htmlFor="password" className={``}>
+      <div className="md:w-[500px] w-full flex flex-col gap-1 items-center text-black">
+        <h1 className={" font-bold text-3xl"}>Reset Your Password</h1>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full"
+        >
+          <div className="w-full mt-5 relative mb-1 flex flex-col gap-2">
+            <label htmlFor="password" className={"font-semibold"}>
               Enter your password
             </label>
             <input
               {...register("password")}
               type={!show ? "password" : "text"}
               placeholder="password!@%"
-              className={``}
+              className={"border p-2 rounded-md"}
             />
             {!show ? (
               <AiOutlineEyeInvisible
@@ -104,15 +107,15 @@ const ResetPassword = ({
           {errors.password && (
             <span className="text-red-500">{`${errors.password.message}`}</span>
           )}
-          <div className="w-full mt-5 relative mb-1">
-            <label htmlFor="confirmPassword" className={``}>
+          <div className="w-full mt-5 relative mb-1 flex flex-col gap-2">
+            <label htmlFor="confirmPassword" className={"font-semibold"}>
               Enter your confirm password
             </label>
             <input
               {...register("confirmPassword")}
               type={!confirmPasswordshow ? "password" : "text"}
               placeholder="password!@%"
-              className={``}
+              className={"border p-2 rounded-md"}
             />
             {!confirmPasswordshow ? (
               <AiOutlineEyeInvisible
@@ -131,14 +134,15 @@ const ResetPassword = ({
           {errors.confirmPassword && (
             <span className="text-red-500">{`${errors.confirmPassword.message}`}</span>
           )}
-          <br />
-          <input
-            type="submit"
-            value="Submit"
-            disabled={isSubmitting || isLoading}
-            className={` mt-3`}
-          />
-          <br />
+          <div className={"flex w-full items-center justify-around"}>
+            <button
+              type="submit"
+              disabled={isSubmitting || isLoading}
+              className={"rounded-md border p-2 bg-blue-500 text-white mt-5"}
+            >
+              Submit
+            </button>
+          </div>
         </form>
       </div>
     </div>
