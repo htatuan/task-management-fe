@@ -3,21 +3,27 @@ import React from "react";
 import { useFormSchema } from "./types/searchFormSchema";
 import { SubmitHandler } from "react-hook-form";
 import { useGetAllTask } from "@/app/services/useRequestClient";
+import { ApiResponse } from "./api.response";
+import callApi from "@/app/services/useGraphQL";
+import { useQuery } from "react-query";
+import { gql } from "graphql-request";
 
-const SearchForm = () => {
+const SearchForm = ({ onSearch }) => {
   const {
     form: { formState, register, reset, handleSubmit: handleSubmit },
     isError,
     getErrorMessage,
   } = useFormSchema();
 
-  const onSubmitSearchForm: SubmitHandler<SearchInputForm> = (dataForm) => {
-    alert("das");
+  let keyword: SearchInputForm = {};
+  const handleOnSubmit = (dataForm: SearchInputForm) => {
+    keyword = dataForm;
+    onSearch(keyword);
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmitSearchForm)}>
+      <form>
         <label
           htmlFor="default-search"
           className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
@@ -51,6 +57,7 @@ const SearchForm = () => {
             {...register("keyword")}
           />
           <button
+            onClick={handleSubmit(handleOnSubmit)}
             type="submit"
             className="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
