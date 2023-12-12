@@ -1,6 +1,5 @@
 import { gql } from "graphql-request";
 import callApi from "./useGraphQL";
-import { useQuery } from "react-query";
 
 export const useRegister = async (
   username: string,
@@ -31,7 +30,7 @@ export const useLogin = async (
   return await callApi().request(
     gql`
       mutation {
-        login(loginInput: { username: "anhtuan", password: "123456789" }) {
+        login(loginInput: { username: "${username}", password: "${password}" }) {
           user {
             id
             username
