@@ -20,15 +20,13 @@ const ForgotPasswordForm = () => {
   const onSubmitForgotPasswordForm: SubmitHandler<{ email: string }> = (
     dataForm
   ) => {
-    console.log(dataForm);
     mutate(
       {
         email: dataForm.email,
       },
       {
         onSuccess: () => {
-          console.log(1);
-          toast.warn(
+          toast.success(
             "Your forgot password request has been sent to your email!",
             {
               position: toast.POSITION.TOP_CENTER,
