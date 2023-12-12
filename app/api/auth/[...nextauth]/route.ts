@@ -20,7 +20,7 @@ export const authOptions: NextAuthOptions = {
         }
         const res = await useLogin(credentials.username, credentials.password);
         if (res?.login) {
-          return {...res?.login, username:res.login.username}
+          return {...res?.login, username:res.login.user.username}
         }
 
         return null;

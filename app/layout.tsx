@@ -5,6 +5,8 @@ import { ReactQueryProvider } from "./react-query-provider";
 import { NextAuthProvider } from "./providers";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import 'react-responsive-modal/styles.css';
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
