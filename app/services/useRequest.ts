@@ -1,14 +1,11 @@
-"use client";
 import { gql } from "graphql-request";
-import graphQLClient from "./useGraphQL";
-import { useQuery } from "react-query";
-import { TaskModel } from "../(private)/task/components/task.model";
+import callApi from "./useGraphQL";
 
 export const useRegister = async (
   username: string,
   password: string
 ): Promise<any> => {
-  return await graphQLClient.request(
+  return await callApi().request(
     gql`
       mutation {
         register(
@@ -26,7 +23,7 @@ export const useLogin = async (
   username: string,
   password: string
 ): Promise<any> => {
-  return await graphQLClient.request(
+  return await callApi().request(
     gql`
       mutation {
         login(
@@ -41,18 +38,18 @@ export const useLogin = async (
   );
 };
 
-export function useGetAllTask() {
-  console.log("1");
-  return useQuery("", () => {
-    const { allTasks } = graphQLClient.request(gql`
-      query {
-        findAllTasks(ownerId: 1) {
-          id
-          status
-          title
-        }
+export const useFetchAllTasks = async ( id: number): Promise<any> => {
+  return await callApi().request(
+    gql`
+    query {
+      findAllTasks(ownerId:${id}) {
+        id,
+        title,
+        status,
+        ownerId
       }
-    `);
-    return allTasks;
-  });
-}
+    }
+    `,
+    { id }
+  );
+};
