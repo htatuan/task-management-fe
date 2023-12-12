@@ -1,6 +1,5 @@
 import { gql } from "graphql-request";
 import callApi from "./useGraphQL";
-import { useQuery } from "react-query";
 
 export const useRegister = async (
   username: string,
