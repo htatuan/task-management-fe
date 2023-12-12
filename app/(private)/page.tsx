@@ -1,11 +1,10 @@
 import React from "react";
+import { useFetchAllTasks } from "../services/useRequest";
 
 const Homepage = async () => {
-  return (
-    <div>
-      Homepage
-    </div>
-  );
+  const ttt = await useFetchAllTasks(1);
+  console.log("ttt=> ", ttt);
+  return <div>Homepage</div>;
 };
 
 export default Homepage;

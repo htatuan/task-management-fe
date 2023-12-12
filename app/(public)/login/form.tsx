@@ -24,18 +24,6 @@ const LoginForm = () => {
 
   const onSubmitLoginForm: SubmitHandler<InputLoginForm> = async (dataForm) => {
     console.log(dataForm);
-    // mutate(
-    //   { username: dataForm.username, password: dataForm.password },
-    //   {
-    //     onSuccess: (res) => {
-    //       console.log("success", res.login.accessToken);
-    //       //push("/");
-    //     },
-    //     onError: (errors) => {
-    //       console.log("error=> ", errors);
-    //     },
-    //   }
-    // );
     const res = await signIn("credentials", {
       redirect: false,
       username: dataForm.username,
