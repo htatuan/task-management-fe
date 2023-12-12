@@ -44,6 +44,21 @@ export const useLogin = async (
   );
 };
 
+export const useForgotPassword = async (email: string): Promise<any> => {
+  return await callApi().request(
+    gql`
+      mutation {
+        forgotPassword(
+          forgotPasswordInput:{email:"${email}"}
+        ) {
+          message
+        }
+      }
+    `,
+    { email }
+  );
+};
+
 export const useFetchAllTasks = async (id: number): Promise<any> => {
   return await callApi().request(
     gql`
