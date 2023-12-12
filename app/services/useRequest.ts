@@ -5,19 +5,22 @@ import { useQuery } from "react-query";
 
 export const useRegister = async (
   username: string,
+  email: string,
   password: string
 ): Promise<any> => {
   return await callApi().request(
     gql`
       mutation {
         register(
-          createUserInput: { username: "${username}", password: "${password}" }
+          registerInput: { username: "${username}", email: "${email}", password: "${password}" }
         ) {
-          username
+          id,
+          username,
+          email
         }
       }
     `,
-    { username, password }
+    { username, email, password }
   );
 };
 
@@ -29,9 +32,13 @@ export const useLogin = async (
     gql`
       mutation {
         login(
-          credentials:{username:"${username}", password:"${password}"}
+          loginInput:{username:"${username}", password:"${password}"}
         ) {
-          username,
+          user{
+            id,
+            username,
+            email
+          },
           accessToken
         }
       }

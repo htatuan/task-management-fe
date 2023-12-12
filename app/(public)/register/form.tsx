@@ -10,18 +10,22 @@ import { useFormSchema } from "./useFormSchema";
 export function RegisterForm(): React.ReactElement {
   const { push } = useRouter();
   const { mutate } = useMutation(
-    (variables: { username: string; password: string }) =>
-      useRegister(variables.username, variables.password)
+    (variables: { username: string; email: string; password: string }) =>
+      useRegister(variables.username, variables.email, variables.password)
   );
-  
+
   const {
     form: { formState, register, reset, handleSubmit: handleSubmit },
     isError,
     getErrorMessage,
   } = useFormSchema();
-  const onSubmitRegisterForm: SubmitHandler<InputLoginForm> = (dataForm) => {
+  const onSubmitRegisterForm: SubmitHandler<InputRegisterForm> = (dataForm) => {
     mutate(
-      { username: dataForm.username, password: dataForm.password },
+      {
+        username: dataForm.username,
+        email: dataForm.email,
+        password: dataForm.password,
+      },
       {
         onSuccess: () => {
           console.log("success");
@@ -54,6 +58,24 @@ export function RegisterForm(): React.ReactElement {
         {isError("username") && (
           <span className="text-red-400 text-sm">
             {getErrorMessage("username")}
+          </span>
+        )}
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2">
+          Email
+        </label>
+        <input
+          className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+            isError("email") ? "border-red-400" : ""
+          }`}
+          type="text"
+          placeholder="email"
+          {...register("email", { required: true })}
+        />
+        {isError("email") && (
+          <span className="text-red-400 text-sm">
+            {getErrorMessage("email")}
           </span>
         )}
       </div>
