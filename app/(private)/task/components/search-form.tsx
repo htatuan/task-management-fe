@@ -8,7 +8,11 @@ import callApi from "@/app/services/useGraphQL";
 import { useQuery } from "react-query";
 import { gql } from "graphql-request";
 
-const SearchForm = ({ onSearch }) => {
+interface SearchProps {
+  onSearch: (keyword: string) => void;
+}
+
+const SearchForm = ({ onSearch }: SearchProps) => {
   const {
     form: { formState, register, reset, handleSubmit: handleSubmit },
     isError,
@@ -17,8 +21,9 @@ const SearchForm = ({ onSearch }) => {
 
   let keyword: SearchInputForm = {};
   const handleOnSubmit = (dataForm: SearchInputForm) => {
-    keyword = dataForm;
-    onSearch(keyword);
+    if (dataForm.keyword) {
+      onSearch(dataForm.keyword);
+    }
   };
 
   return (

@@ -4,8 +4,8 @@ import callApi from "./useGraphQL";
 import { useQuery } from "react-query";
 
 export function useGetAllTask(id: number) {
-  return useQuery("getAllTasks", () => {
-    const allTasks = callApi().request(gql`
+  return useQuery("getAllTasks", async () => {
+    const allTasks = await callApi().request(gql`
       query {
         data:findAllTasks(ownerId: ${id}) {
           id

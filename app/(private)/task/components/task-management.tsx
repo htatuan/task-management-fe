@@ -11,22 +11,17 @@ import callApi from "@/app/services/useGraphQL";
 import { gql } from "graphql-request";
 
 const TaskManagement = () => {
-  const [keyword, setKeyword] = useState("");
-  useEffect(() => {
-    console.log("call");
-    refetch();
-
-    // The cleanup function: This will run when the component unmounts or when the dependency array changes
-    return () => {
-      console.log(
-        "Cleanup function: Component is unmounting or dependency changed"
-      );
-    };
-  }, [keyword]);
+  const [keyword, setKeyword] = useState<string>("");
+  const [refesh, setRefresh] = useState<number>(1);
+  // useEffect(() => {
+  //   console.log("call => ", typeof key);
+  //   refetch();
+  // }, [key]);
 
   const { data, isFetching, status, error, refetch }: any = useQuery(
-    "searchTask",
+    ["searchTask", keyword, refesh],
     () => {
+      console.log("start call api with key=> ", keyword);
       const allTasks = callApi().request(gql`
         query {
           data: searchTask(keyword: "${keyword}") {
@@ -55,12 +50,12 @@ const TaskManagement = () => {
   return (
     <>
       <div className="text-right mt-5">
-        <AddTask />
+        <AddTask onAdd={() => setRefresh(Date.now())}/>
       </div>
 
       <div className="mt-5">
         <SearchForm
-          onSearch={(key) => {
+          onSearch={(key: string) => {
             console.log("key=> ", key);
             setKeyword(key);
           }}

@@ -4,8 +4,12 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { Modal } from "react-responsive-modal";
 
-const AddTask = () => {
-  const [open, setOpen] = useState(false);
+interface AddTaskProps {
+  onAdd: () => void;
+}
+
+const AddTask = ({ onAdd }: AddTaskProps) => {
+  const [open, setOpen] = useState<boolean>(false);
 
   const {
     register,
@@ -31,6 +35,8 @@ const AddTask = () => {
       {
         onSuccess: () => {
           console.log("success");
+          onAdd();
+          setOpen(false);
         },
         onError: (errors) => {
           console.log("error=> ", errors);
@@ -49,10 +55,7 @@ const AddTask = () => {
       </button>
       <Modal open={open} onClose={() => setOpen(false)} center>
         <div className="flex items-center justify-center min-height-100vh pt-4 px-4 pb-20 sm:block sm:p-0">
-          <form
-            onSubmit={handleSubmit(onSubmitTaskForm)}
-            className="px-8 pt-6"
-          >
+          <form onSubmit={handleSubmit(onSubmitTaskForm)} className="px-8 pt-6">
             <div className="">
               <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Title
