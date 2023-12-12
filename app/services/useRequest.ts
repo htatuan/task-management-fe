@@ -1,4 +1,3 @@
-"use client";
 import { gql } from "graphql-request";
 import callApi from "./useGraphQL";
 import { useQuery } from "react-query";
@@ -28,17 +27,16 @@ export const useLogin = async (
   username: string,
   password: string
 ): Promise<any> => {
+  console.log("call login");
   return await callApi().request(
     gql`
       mutation {
-        login(
-          loginInput:{username:"${username}", password:"${password}"}
-        ) {
-          user{
-            id,
-            username,
+        login(loginInput: { username: "anhtuan", password: "123456789" }) {
+          user {
+            id
+            username
             email
-          },
+          }
           accessToken
         }
       }
@@ -62,18 +60,3 @@ export const useFetchAllTasks = async (id: number): Promise<any> => {
     { id }
   );
 };
-
-export function useGetAllTask(id: number) {
-  return useQuery("getAllTasks", () => {
-    const allTasks = callApi().request(gql`
-      query {
-        findAllTasks(ownerId: ${id}) {
-          id
-          status
-          title
-        }
-      }
-    `);
-    return allTasks;
-  });
-}
