@@ -7,7 +7,7 @@ export function useGetAllTask(id: number) {
   return useQuery("getAllTasks", () => {
     const allTasks = callApi().request(gql`
       query {
-        findAllTasks(ownerId: ${id}) {
+        data:findAllTasks(ownerId: ${id}) {
           id
           status
           title
