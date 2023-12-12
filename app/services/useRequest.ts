@@ -1,5 +1,6 @@
 import { gql } from "graphql-request";
 import callApi from "./useGraphQL";
+import { useQuery } from "react-query";
 
 export const useRegister = async (
   username: string,
@@ -38,7 +39,7 @@ export const useLogin = async (
   );
 };
 
-export const useFetchAllTasks = async ( id: number): Promise<any> => {
+export const useFetchAllTasks = async (id: number): Promise<any> => {
   return await callApi().request(
     gql`
     query {
@@ -53,3 +54,19 @@ export const useFetchAllTasks = async ( id: number): Promise<any> => {
     { id }
   );
 };
+
+export function useGetAllTask(id: number) {
+  console.log("1");
+  return useQuery("getAllTasks", () => {
+    const allTasks = callApi().request(gql`
+      query {
+        findAllTasks(ownerId: ${id}) {
+          id
+          status
+          title
+        }
+      }
+    `);
+    return allTasks;
+  });
+}
