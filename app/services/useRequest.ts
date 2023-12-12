@@ -92,3 +92,27 @@ export const useFetchAllTasks = async (id: number): Promise<any> => {
     { id }
   );
 };
+
+export const addNewTask = async (
+  title: string,
+  status: string,
+  ownerId: number
+): Promise<any> => {
+  return await callApi().request(
+    gql`
+    mutation {
+      createTask(createTaskInput:{
+        title: "${title}",
+        status: "${status}",
+        ownerId: ${ownerId}
+      }
+      ) {
+        id,
+        title,
+        status
+      }
+    }
+    `,
+    { title, status, ownerId }
+  );
+};
