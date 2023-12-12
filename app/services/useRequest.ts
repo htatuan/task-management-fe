@@ -30,7 +30,7 @@ export const useLogin = async (
   return await callApi().request(
     gql`
       mutation {
-        login(loginInput: { username: "anhtuan", password: "123456789" }) {
+        login(loginInput: { username: "${username}", password: "${password}" }) {
           user {
             id
             username
@@ -41,6 +41,21 @@ export const useLogin = async (
       }
     `,
     { username, password }
+  );
+};
+
+export const useForgotPassword = async (email: string): Promise<any> => {
+  return await callApi().request(
+    gql`
+      mutation {
+        forgotPassword(
+          forgotPasswordInput:{email:"${email}"}
+        ) {
+          message
+        }
+      }
+    `,
+    { email }
   );
 };
 
