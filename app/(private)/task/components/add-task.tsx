@@ -5,15 +5,16 @@ import { useMutation } from "react-query";
 import { Modal } from "react-responsive-modal";
 
 interface AddTaskProps {
-  onAddSuccess: () => void;
+  onRefreshData: () => void;
 }
 
-const AddTask = ({ onAddSuccess }: AddTaskProps) => {
+const AddTask = ({ onRefreshData }: AddTaskProps) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<InputAddTaskForm>();
 
@@ -29,13 +30,13 @@ const AddTask = ({ onAddSuccess }: AddTaskProps) => {
     mutate(
       {
         title: dataForm.title,
-        status: dataForm.status,
+        status: "TO DO",
         ownerId: 1,
       },
       {
         onSuccess: () => {
           console.log("success");
-          onAddSuccess();
+          onRefreshData();
           setOpen(false);
         },
         onError: (errors) => {
@@ -49,7 +50,10 @@ const AddTask = ({ onAddSuccess }: AddTaskProps) => {
     <>
       <button
         className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          reset();
+          setOpen(true);
+        }}
       >
         New Task
       </button>
@@ -68,26 +72,6 @@ const AddTask = ({ onAddSuccess }: AddTaskProps) => {
               {errors.title && (
                 <p className="text-red-500 text-xs italic">
                   Please enter title
-                </p>
-              )}
-            </div>
-            <div className="">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Status
-              </label>
-              <select
-                {...register("status", { required: true })}
-                className=" border rounded border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              >
-                <option value="">Choose status</option>
-                <option value="TO DO">TO DO</option>
-                <option value="IN PROGRESS">IN PROGRESS</option>
-                <option value="COMPLETED">COMPLETED</option>
-                <option value="ARCHIVED">ARCHIVED</option>
-              </select>
-              {errors.status && (
-                <p className="text-red-500 text-xs italic">
-                  Please enter status
                 </p>
               )}
             </div>

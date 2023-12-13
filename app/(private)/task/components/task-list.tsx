@@ -1,18 +1,54 @@
 "use client";
-import { SubmitHandler } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { TaskModel } from "./task.model";
-import { useFormSchema } from "./types/searchFormSchema";
-import { useGetAllTask } from "@/app/services/useRequestClient";
-import { ApiResponse } from "./api.response";
-import { useQuery } from "react-query";
-import callApi from "@/app/services/useGraphQL";
-import { gql } from "graphql-request";
+import { useMutation } from "react-query";
+import Modal from "react-responsive-modal";
+import { useState } from "react";
+import { updateTask } from "@/app/services/useRequest";
 
-interface Task {
+interface TaskListProps {
   tasks: TaskModel[];
+  onRefreshData: () => void;
 }
 
-const TaskList = ({ tasks }: Task) => {
+const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<TaskModel>({} as TaskModel);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<InputEditTaskForm>();
+
+  const { mutate } = useMutation((variables: { id: number; status: string }) =>
+    updateTask(variables.id, variables.status)
+  );
+
+  const onSubmitEditTaskForm: SubmitHandler<InputEditTaskForm> = async (
+    dataForm
+  ) => {
+    console.log(dataForm);
+    console.log("selected item=> ", selectedItem);
+    mutate(
+      {
+        id: selectedItem.id,
+        status: dataForm.status,
+      },
+      {
+        onSuccess: () => {
+          console.log("success");
+          onRefreshData();
+          setOpen(false);
+        },
+        onError: (errors) => {
+          console.log("error=> ", errors);
+        },
+      }
+    );
+  };
+
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -26,10 +62,11 @@ const TaskList = ({ tasks }: Task) => {
                 Status
               </th>
               <th scope="col" className="px-6 py-3">
-                Description
+                Created Date
               </th>
-              <th scope="col" className="px-6 py-3"></th>
-              <th scope="col" className="px-6 py-3"></th>
+              <th scope="col" className="px-6 py-3">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -42,31 +79,83 @@ const TaskList = ({ tasks }: Task) => {
                   scope="row"
                   className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  {task.id}
+                  {task.title}
                 </th>
                 <td className="px-6 py-4">{task.status}</td>
-                <td className="px-6 py-4">{task.title}</td>
+                <td className="px-6 py-4">{task.createdAt}</td>
                 <td className="px-6 py-4">
-                  <a
-                    href="#"
-                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  <button
+                    type="button"
+                    className="py-2 px-2 bg-orange-500 text-white rounded hover:bg-blue-700 mr-2"
+                    onClick={() => {
+                      setSelectedItem(task);
+                      setValue("status", task.status);
+                      setOpen(true);
+                    }}
                   >
-                    Edit
-                  </a>
-                </td>
-                <td className="px-6 py-4">
-                  <a
-                    href="#"
-                    className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    <i className="fas fa-plus"></i> Edit
+                  </button>
+                  <button
+                    type="button"
+                    className="py-2 px-2 bg-red-500 text-white rounded hover:bg-gray-700 "
                   >
-                    Delete
-                  </a>
+                    <i className="fas fa-times"></i> Delete
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      <Modal open={open} onClose={() => setOpen(false)} center>
+        <div className="flex items-center justify-center min-height-100vh pt-4 px-4 pb-20 sm:block sm:p-0">
+          <form
+            onSubmit={handleSubmit(onSubmitEditTaskForm)}
+            className="px-8 pt-6"
+          >
+            <div className="">
+              <h3>
+                Update status for the task:{" "}
+                <strong>[{selectedItem.title}]</strong>
+              </h3>
+            </div>
+            <div className="">
+              <select
+                {...register("status", { required: true })}
+                className=" border rounded border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                <option value="">Choose status</option>
+                <option value="TO DO">TO DO</option>
+                <option value="IN PROGRESS">IN PROGRESS</option>
+                <option value="COMPLETED">COMPLETED</option>
+                <option value="ARCHIVED">ARCHIVED</option>
+              </select>
+              {errors.status && (
+                <p className="text-red-500 text-xs italic">
+                  Please enter status
+                </p>
+              )}
+            </div>
+
+            <div className="mt-5 text-right">
+              <button
+                type="button"
+                className="py-2 px-4 bg-red-500 text-white rounded hover:bg-gray-700 mr-2"
+                onClick={() => setOpen(false)}
+              >
+                <i className="fas fa-times"></i> Cancel
+              </button>
+              <button
+                type="submit"
+                className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700"
+              >
+                <i className="fas fa-plus"></i> Update
+              </button>
+            </div>
+          </form>
+        </div>
+      </Modal>
     </>
   );
 };

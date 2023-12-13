@@ -5,5 +5,8 @@ type InputLoginForm = {
 
 type InputAddTaskForm = {
   title: string;
-  status:string;
+};
+
+type InputEditTaskForm = {
+  status: string;
 };
