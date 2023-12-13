@@ -5,6 +5,7 @@ import { useMutation } from "react-query";
 import Modal from "react-responsive-modal";
 import { useState } from "react";
 import { updateTask } from "@/app/services/useRequest";
+import DeleteTask from "./delete-task";
 
 interface TaskListProps {
   tasks: TaskModel[];
@@ -13,6 +14,7 @@ interface TaskListProps {
 
 const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
   const [open, setOpen] = useState<boolean>(false);
+  const [willShowModal, setWillShowDeleteTaskModal] = useState<boolean>(false);
   const [selectedItem, setSelectedItem] = useState<TaskModel>({} as TaskModel);
 
   const {
@@ -26,11 +28,14 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
     updateTask(variables.id, variables.status)
   );
 
+  const deleteTask = async (task: TaskModel) => {
+    setSelectedItem(task);
+    setWillShowDeleteTaskModal(true);
+  };
+
   const onSubmitEditTaskForm: SubmitHandler<InputEditTaskForm> = async (
     dataForm
   ) => {
-    console.log(dataForm);
-    console.log("selected item=> ", selectedItem);
     mutate(
       {
         id: selectedItem.id,
@@ -38,7 +43,6 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
       },
       {
         onSuccess: () => {
-          console.log("success");
           onRefreshData();
           setOpen(false);
         },
@@ -51,6 +55,15 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
 
   return (
     <>
+      <DeleteTask
+        id={selectedItem.id}
+        willShowModal={willShowModal}
+        onDeleteTaskSuccess={() => {
+          onRefreshData();
+        }}
+        onShowDeleteTaskModal={setWillShowDeleteTaskModal}
+      />
+
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -86,7 +99,7 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
                 <td className="px-6 py-4">
                   <button
                     type="button"
-                    className="py-2 px-2 bg-orange-500 text-white rounded hover:bg-blue-700 mr-2"
+                    className="py-2 px-2 bg-orange-500 text-white rounded rounded-full hover:bg-blue-700 mr-2"
                     onClick={() => {
                       setSelectedItem(task);
                       setValue("status", task.status);
@@ -96,8 +109,12 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
                     <i className="fas fa-plus"></i> Edit
                   </button>
                   <button
+                    disabled={task.status == "ARCHIVED"}
                     type="button"
-                    className="py-2 px-2 bg-red-500 text-white rounded hover:bg-gray-700 "
+                    onClick={async () => {
+                      await deleteTask(task);
+                    }}
+                    className="py-2 px-2 bg-red-500 text-white rounded rounded-full hover:bg-gray-700 "
                   >
                     <i className="fas fa-times"></i> Delete
                   </button>
