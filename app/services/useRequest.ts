@@ -116,3 +116,13 @@ export const addNewTask = async (
     { title, status, ownerId }
   );
 };
+
+export const deleteTask = async (taskId: number): Promise<any> => {
+  return await callApi().request(
+    gql`
+    mutation {
+      data:deleteTask(id:${taskId}) 
+    } `,
+    { taskId }
+  );
+};

@@ -11,7 +11,7 @@ import callApi from "@/app/services/useGraphQL";
 import { gql } from "graphql-request";
 
 const TaskManagement = () => {
-  const [keyword, setKeyword] = useState<string>("");
+  const [keyword, setKeyword] = useState<string | undefined>("");
   const [refesh, setRefresh] = useState<number>(1);
 
   const { data, isFetching, status, error, refetch }: any = useQuery(
@@ -47,12 +47,12 @@ const TaskManagement = () => {
   return (
     <>
       <div className="text-right mt-5">
-        <AddTask onAddSuccess={() => setRefresh(Date.now())}/>
+        <AddTask onAddSuccess={() => setRefresh(Date.now())} />
       </div>
 
       <div className="mt-5">
         <SearchForm
-          onSearch={(key: string) => {
+          onSearch={(key?: string) => {
             console.log("key=> ", key);
             setKeyword(key);
           }}

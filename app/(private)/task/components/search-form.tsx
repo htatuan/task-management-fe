@@ -1,15 +1,9 @@
 "use client";
 import React from "react";
 import { useFormSchema } from "./types/searchFormSchema";
-import { SubmitHandler } from "react-hook-form";
-import { useGetAllTask } from "@/app/services/useRequestClient";
-import { ApiResponse } from "./api.response";
-import callApi from "@/app/services/useGraphQL";
-import { useQuery } from "react-query";
-import { gql } from "graphql-request";
 
 interface SearchProps {
-  onSearch: (keyword: string) => void;
+  onSearch: (keyword?: string) => void;
 }
 
 const SearchForm = ({ onSearch }: SearchProps) => {
@@ -21,9 +15,7 @@ const SearchForm = ({ onSearch }: SearchProps) => {
 
   let keyword: SearchInputForm = {};
   const handleOnSubmit = (dataForm: SearchInputForm) => {
-    if (dataForm.keyword) {
-      onSearch(dataForm.keyword);
-    }
+    onSearch(dataForm.keyword);
   };
 
   return (
