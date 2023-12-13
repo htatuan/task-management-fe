@@ -5,10 +5,10 @@ import { useMutation } from "react-query";
 import { Modal } from "react-responsive-modal";
 
 interface AddTaskProps {
-  onAdd: () => void;
+  onAddSuccess: () => void;
 }
 
-const AddTask = ({ onAdd }: AddTaskProps) => {
+const AddTask = ({ onAddSuccess }: AddTaskProps) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const {
@@ -35,7 +35,7 @@ const AddTask = ({ onAdd }: AddTaskProps) => {
       {
         onSuccess: () => {
           console.log("success");
-          onAdd();
+          onAddSuccess();
           setOpen(false);
         },
         onError: (errors) => {

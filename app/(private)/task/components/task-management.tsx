@@ -13,10 +13,6 @@ import { gql } from "graphql-request";
 const TaskManagement = () => {
   const [keyword, setKeyword] = useState<string>("");
   const [refesh, setRefresh] = useState<number>(1);
-  // useEffect(() => {
-  //   console.log("call => ", typeof key);
-  //   refetch();
-  // }, [key]);
 
   const { data, isFetching, status, error, refetch }: any = useQuery(
     ["searchTask", keyword, refesh],
@@ -50,7 +46,7 @@ const TaskManagement = () => {
   return (
     <>
       <div className="text-right mt-5">
-        <AddTask onAdd={() => setRefresh(Date.now())}/>
+        <AddTask onAddSuccess={() => setRefresh(Date.now())}/>
       </div>
 
       <div className="mt-5">
