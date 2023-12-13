@@ -6,7 +6,7 @@ const Header = (props: { username: string }) => {
   return (
     <>
       <nav className="border-b border-gray-200 dark:border-gray-600">
-        <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
+        <div className="flex flex-wrap justify-between items-center mx-auto p-4">
           <a
             href="#"
             className="flex items-center space-x-3 rtl:space-x-reverse"
@@ -15,10 +15,8 @@ const Header = (props: { username: string }) => {
               Task Management
             </span>
           </a>
-          <div className="flex items-center space-x-6 rtl:space-x-reverse">
-            <p
-              className="text-sm  text-gray-500 dark:text-white"
-            >
+          <div className="flex items-center space-x-6 rtl:space-x-reverse text-right">
+            <p className="text-sm  text-gray-500 dark:text-white">
               Welcome <b>{props.username}</b>
             </p>
             <button
@@ -27,7 +25,6 @@ const Header = (props: { username: string }) => {
             >
               Sign out
             </button>
-            
           </div>
         </div>
       </nav>

@@ -46,24 +46,26 @@ const TaskManagement = () => {
 
   return (
     <>
-      <div className="text-right mt-5">
-        <AddTask onRefreshData={() => setRefresh(Date.now())} />
-      </div>
+      <div className="p-4">
+        <div className="text-right mt-5">
+          <AddTask onRefreshData={() => setRefresh(Date.now())} />
+        </div>
 
-      <div className="mt-5">
-        <SearchForm
-          onSearch={(key: string | undefined) => {
-            console.log("key=> ", key);
-            setKeyword(key);
-          }}
-        />
-      </div>
+        <div className="mt-5">
+          <SearchForm
+            onSearch={(key: string | undefined) => {
+              console.log("key=> ", key);
+              setKeyword(key);
+            }}
+          />
+        </div>
 
-      <div className="mt-5">
-        <TaskList
-          tasks={responseData}
-          onRefreshData={() => setRefresh(Date.now())}
-        />
+        <div className="mt-5">
+          <TaskList
+            tasks={responseData}
+            onRefreshData={() => setRefresh(Date.now())}
+          />
+        </div>
       </div>
     </>
   );
