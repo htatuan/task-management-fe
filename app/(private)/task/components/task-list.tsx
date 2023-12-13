@@ -1,27 +1,53 @@
 "use client";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { TaskModel } from "./task.model";
-import { useFormSchema } from "./types/searchFormSchema";
-import { useGetAllTask } from "@/app/services/useRequestClient";
-import { ApiResponse } from "./api.response";
-import { useQuery } from "react-query";
-import callApi from "@/app/services/useGraphQL";
-import { gql } from "graphql-request";
+import { useMutation } from "react-query";
 import Modal from "react-responsive-modal";
 import { useState } from "react";
+import { updateTask } from "@/app/services/useRequest";
 
-interface Task {
+interface TaskListProps {
   tasks: TaskModel[];
+  onRefreshData: () => void;
 }
 
-const TaskList = ({ tasks }: Task) => {
-  const [open, setOpen] = useState<boolean>(false)
+const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<TaskModel>({} as TaskModel);
 
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = useForm<InputEditTaskForm>();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<InputEditTaskForm>();
+
+  const { mutate } = useMutation((variables: { id: number; status: string }) =>
+    updateTask(variables.id, variables.status)
+  );
+
+  const onSubmitEditTaskForm: SubmitHandler<InputEditTaskForm> = async (
+    dataForm
+  ) => {
+    console.log(dataForm);
+    console.log("selected item=> ", selectedItem);
+    mutate(
+      {
+        id: selectedItem.id,
+        status: dataForm.status,
+      },
+      {
+        onSuccess: () => {
+          console.log("success");
+          onRefreshData();
+          setOpen(false);
+        },
+        onError: (errors) => {
+          console.log("error=> ", errors);
+        },
+      }
+    );
+  };
 
   return (
     <>
@@ -61,6 +87,11 @@ const TaskList = ({ tasks }: Task) => {
                   <button
                     type="button"
                     className="py-2 px-2 bg-orange-500 text-white rounded hover:bg-blue-700 mr-2"
+                    onClick={() => {
+                      setSelectedItem(task);
+                      setValue("status", task.status);
+                      setOpen(true);
+                    }}
                   >
                     <i className="fas fa-plus"></i> Edit
                   </button>
@@ -77,28 +108,19 @@ const TaskList = ({ tasks }: Task) => {
         </table>
       </div>
 
-      {/* <Modal open={open} onClose={() => setOpen(false)} center>
+      <Modal open={open} onClose={() => setOpen(false)} center>
         <div className="flex items-center justify-center min-height-100vh pt-4 px-4 pb-20 sm:block sm:p-0">
-          <form onSubmit={handleSubmit(onSubmitTaskForm)} className="px-8 pt-6">
+          <form
+            onSubmit={handleSubmit(onSubmitEditTaskForm)}
+            className="px-8 pt-6"
+          >
             <div className="">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Title
-              </label>
-              <input
-                type="text"
-                className="w-full outline-none rounded  border border-gray-300 p-2 mt-2 mb-3"
-                {...register("title", { required: true })}
-              />
-              {errors.title && (
-                <p className="text-red-500 text-xs italic">
-                  Please enter title
-                </p>
-              )}
+              <h3>
+                Update status for the task:{" "}
+                <strong>[{selectedItem.title}]</strong>
+              </h3>
             </div>
             <div className="">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Status
-              </label>
               <select
                 {...register("status", { required: true })}
                 className=" border rounded border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -128,12 +150,12 @@ const TaskList = ({ tasks }: Task) => {
                 type="submit"
                 className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700"
               >
-                <i className="fas fa-plus"></i> Create
+                <i className="fas fa-plus"></i> Update
               </button>
             </div>
           </form>
         </div>
-      </Modal> */}
+      </Modal>
     </>
   );
 };
