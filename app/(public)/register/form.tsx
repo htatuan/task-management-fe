@@ -70,7 +70,7 @@ export function RegisterForm(): React.ReactElement {
             isError("email") ? "border-red-400" : ""
           }`}
           type="text"
-          placeholder="email"
+          placeholder="Email"
           {...register("email", { required: true })}
         />
         {isError("email") && (

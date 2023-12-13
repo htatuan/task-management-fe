@@ -6,6 +6,13 @@ import Link from "next/link";
 import { useFormSchema } from "../register/useFormSchema";
 import { useForgotPassword } from "@/app/services/useRequest";
 import { toast } from "react-toastify";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { formatErrorResponse } from "@/utils/format-error";
+
+const emailSchema: any = z.object({
+  email: z.string().email(),
+});
 
 const ForgotPasswordForm = () => {
   const { mutate } = useMutation((variables: { email: string }) =>
@@ -16,7 +23,9 @@ const ForgotPasswordForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<{ email: string }>();
+  } = useForm<{ email: string }>({
+    resolver: zodResolver(emailSchema),
+  });
   const onSubmitForgotPasswordForm: SubmitHandler<{ email: string }> = (
     dataForm
   ) => {
@@ -29,12 +38,12 @@ const ForgotPasswordForm = () => {
           toast.success(
             "Your forgot password request has been sent to your email!",
             {
-              position: toast.POSITION.TOP_CENTER,
+              position: toast.POSITION.TOP_RIGHT,
             }
           );
         },
-        onError: (errors) => {
-          console.log("error=> ", errors);
+        onError: (error: any) => {
+          toast.error(formatErrorResponse(error).message);
         },
       }
     );
@@ -56,7 +65,7 @@ const ForgotPasswordForm = () => {
           {...register("email", { required: true })}
         />
         {errors.email && (
-          <p className="text-red-500 text-xs italic">Please fill an email.</p>
+          <p className="text-red-500 text-xs italic">{`${errors.email.message}`}</p>
         )}
       </div>
       <div className="flex flex-col w-full gap-1">

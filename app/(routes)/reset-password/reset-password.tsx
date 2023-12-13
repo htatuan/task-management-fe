@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useMutation } from "react-query";
 import { useResetPassword } from "../../services/useRequest";
 import { useRouter } from "next/navigation";
+import { formatErrorResponse } from "@/utils/format-error";
 
 const formSchema: any = z
   .object({
@@ -56,14 +57,15 @@ const ResetPassword = ({
           password: data.password,
         },
         {
-          onSuccess: () => {
+          onSuccess: (data) => {
+            console.log(data);
             toast.success("Password updated successfully!", {
               position: toast.POSITION.TOP_CENTER,
             });
             push("/login");
           },
-          onError: (errors) => {
-            console.log("error=> ", errors);
+          onError: (error: any) => {
+            toast.error(formatErrorResponse(error).message);
           },
         }
       );
