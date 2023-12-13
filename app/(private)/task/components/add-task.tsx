@@ -5,15 +5,16 @@ import { useMutation } from "react-query";
 import { Modal } from "react-responsive-modal";
 
 interface AddTaskProps {
-  onAddSuccess: () => void;
+  onRefreshData: () => void;
 }
 
-const AddTask = ({ onAddSuccess }: AddTaskProps) => {
+const AddTask = ({ onRefreshData }: AddTaskProps) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<InputAddTaskForm>();
 
@@ -35,7 +36,7 @@ const AddTask = ({ onAddSuccess }: AddTaskProps) => {
       {
         onSuccess: () => {
           console.log("success");
-          onAddSuccess();
+          onRefreshData();
           setOpen(false);
         },
         onError: (errors) => {
@@ -49,7 +50,10 @@ const AddTask = ({ onAddSuccess }: AddTaskProps) => {
     <>
       <button
         className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          reset();
+          setOpen(true);
+        }}
       >
         New Task
       </button>

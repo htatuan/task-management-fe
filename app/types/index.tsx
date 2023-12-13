@@ -8,7 +8,5 @@ type InputAddTaskForm = {
 };
 
 type InputEditTaskForm = {
-  title: string;
-  status:string;
+  status: string;
 };
-

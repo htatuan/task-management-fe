@@ -47,7 +47,7 @@ const TaskManagement = () => {
   return (
     <>
       <div className="text-right mt-5">
-        <AddTask onAddSuccess={() => setRefresh(Date.now())}/>
+        <AddTask onRefreshData={() => setRefresh(Date.now())} />
       </div>
 
       <div className="mt-5">
@@ -60,7 +60,7 @@ const TaskManagement = () => {
       </div>
 
       <div className="mt-5">
-        <TaskList tasks={responseData} />
+        <TaskList tasks={responseData} onRefreshData={() => setRefresh(Date.now())} />
       </div>
     </>
   );
