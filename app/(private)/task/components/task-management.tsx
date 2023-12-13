@@ -24,6 +24,7 @@ const TaskManagement = () => {
             id
             status
             title
+            createdAt
           }
         }
       `);
