@@ -40,7 +40,6 @@ const LoginForm = () => {
     }
   };
 
-
   return (
     <form
       onSubmit={handleSubmit(onSubmitLoginForm)}
@@ -85,7 +84,20 @@ const LoginForm = () => {
         >
           Sign In
         </button>
-        <Link href="/register" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">Register</Link>
+        <Link
+          href="/register"
+          className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+        >
+          Register
+        </Link>
+      </div>
+      <div className="flex items-center justify-between mt-1">
+        <Link
+          href="/forgot-password"
+          className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+        >
+          Forgot your password?
+        </Link>
       </div>
     </form>
   );
