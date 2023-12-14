@@ -6,6 +6,7 @@ import Modal from "react-responsive-modal";
 import { useState } from "react";
 import { updateTask } from "@/app/services/useRequest";
 import DeleteTask from "./delete-task";
+import { toShortDateTimeString } from "@/utils/format-date";
 
 interface TaskListProps {
   tasks: TaskModel[];
@@ -31,6 +32,29 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
   const deleteTask = async (task: TaskModel) => {
     setSelectedItem(task);
     setWillShowDeleteTaskModal(true);
+  };
+
+  const progressStatusStyle = (status: string) => {
+    let style = "";
+    switch (status) {
+      case "TO DO":
+        style = "bg-blue-500 text-white rounded rounded-full text-center";
+        break;
+      case "IN PROGRESS":
+        style = "bg-cyan-600 text-white rounded rounded-full text-center";
+        break;
+      case "COMPLETED":
+        style = "bg-green-600 text-white rounded rounded-full text-center";
+        break;
+      case "ARCHIVED":
+        style = "bg-neutral-400 text-white rounded rounded-full text-center";
+        break;
+
+      default:
+        style = "";
+        break;
+    }
+    return style;
   };
 
   const onSubmitEditTaskForm: SubmitHandler<InputEditTaskForm> = async (
@@ -71,10 +95,10 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
               <th scope="col" className="px-6 py-3">
                 Title
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-1 w-10 text-center">
                 Status
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-12 py-3 text-center ">
                 Created Date
               </th>
               <th scope="col" className="px-6 py-3">
@@ -86,17 +110,25 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
             {tasks.map((task) => (
               <tr
                 key={task.id}
-                className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
+                className=" odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
               >
                 <th
                   scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  className="px-6 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
                   {task.title}
                 </th>
-                <td className="px-6 py-4">{task.status}</td>
-                <td className="px-6 py-4">{task.createdAt}</td>
-                <td className="px-6 py-4">
+                <td
+                  className={`px-6 py-1 w-10 ${progressStatusStyle(
+                    task.status
+                  )}`}
+                >
+                  {task.status}
+                </td>
+                <td className="px-12 py-1 text-center ">
+                  {toShortDateTimeString(task.createdAt)}
+                </td>
+                <td className="px-6 py-1">
                   <button
                     type="button"
                     className="py-2 px-2 bg-orange-500 text-white rounded rounded-full hover:bg-blue-700 mr-2"
