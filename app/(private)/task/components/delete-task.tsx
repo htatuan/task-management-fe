@@ -1,8 +1,10 @@
 import { addNewTask, deleteTask } from "@/app/services/useRequest";
+import { formatErrorResponse } from "@/utils/format-error";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { Modal } from "react-responsive-modal";
+import { toast } from "react-toastify";
 
 interface DeleteTaskProps {
   onDeleteTaskSuccess: () => void;
@@ -18,13 +20,11 @@ const DeleteTask = (deleteTaskProps: DeleteTaskProps) => {
     willShowModal,
     onShowDeleteTaskModal: onShowModal,
   } = deleteTaskProps;
-  console.log("task id => " + id);
   const { mutate } = useMutation((variables: { id: number }) =>
     deleteTask(variables.id)
   );
 
   const onDeleteTask = async () => {
-    console.log("delete it now" + id);
     mutate(
       {
         id: id!,
@@ -34,8 +34,8 @@ const DeleteTask = (deleteTaskProps: DeleteTaskProps) => {
           onDeleteTaskSuccess();
           onShowModal(false);
         },
-        onError: (errors) => {
-          console.log("error=> ", errors);
+        onError: (error) => {
+          toast.error(formatErrorResponse(error).message);
         },
       }
     );
