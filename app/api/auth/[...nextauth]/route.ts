@@ -20,7 +20,8 @@ export const authOptions: NextAuthOptions = {
         }
         const res = await useLogin(credentials.username, credentials.password);
         if (res?.login) {
-          return {...res?.login, username:res.login.user.username}
+          console.log("res?.login => ", res?.login);
+          return { ...res?.login };
         }
 
         return null;
@@ -33,15 +34,23 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.accessToken = user.accessToken;
-        token.username = user.username
+        token = {
+          ...token,
+          accessToken: user.accessToken,
+          name: user.user.username,
+          email: user.user.email,
+        };
       }
       return token;
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       if (session) {
-        session.accessToken = token.accessToken;
-        session.username = token.username
+        session.user = {
+          ...session.user,
+          name: token.name,
+          email: token.email,
+          accessToken: token.accessToken,
+        };
       }
       return session;
     },

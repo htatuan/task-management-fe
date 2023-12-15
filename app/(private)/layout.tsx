@@ -22,7 +22,7 @@ export default async function PrivateLayout({
 
   return (
     <div className="private-layout">
-      <Header username={session.username} />
+      <Header username={session.user.name} />
       {children}
     </div>
   );

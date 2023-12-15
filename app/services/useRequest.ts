@@ -1,5 +1,7 @@
 import { gql } from "graphql-request";
 import callApi from "./useGraphQL";
+import useQueryCustom from "./useQueryCustom";
+import useMutationCustom from "./useMutationCustom";
 
 export const useRegister = async (
   username: string,
@@ -77,50 +79,39 @@ export const useResetPassword = async (
   );
 };
 
-export const useFetchAllTasks = async (id: number): Promise<any> => {
-  return await callApi().request(
-    gql`
-    query {
-      findAllTasks(ownerId:${id}) {
-        id,
-        title,
-        status,
-        ownerId
-      }
+export const useFetchAllTasks = (
+  queryKey: string,
+  ...args: (string | number | undefined)[]
+) => {
+  const queryStatement = `query {
+    data: searchTask(keyword: "${args[0]}") {
+      id
+      status
+      title
+      createdAt
     }
-    `,
-    { id }
-  );
+  }`;
+  return useQueryCustom(queryKey, queryStatement, ...args);
 };
 
-export const addNewTask = async (
-  title: string,
-  status: string,
-  ownerId: number
-): Promise<any> => {
-  return await callApi().request(
-    gql`
-    mutation {
-      createTask(createTaskInput:{
-        title: "${title}",
-        status: "${status}",
-        ownerId: ${ownerId}
-      }
-      ) {
-        id,
-        title,
-        status
-      }
-    }
-    `,
-    { title, status, ownerId }
-  );
+export const addNewTask = (variables:{title:string, status:string}) => {
+  const queryStatement = `mutation {
+        createTask(createTaskInput:{
+          title: "${variables.title}",
+          status: "${variables.status}"
+          ownerId: 1
+        }
+        ) {
+          id,
+          title,
+          status
+        }
+      }`;
+
+  return useMutationCustom(queryStatement, variables.title, variables.status, 1);
 };
 
-export const updateTask = async (
-  id: number,
-  status: string
-): Promise<any> => {
+export const updateTask = async (id: number, status: string): Promise<any> => {
   return await callApi().request(
     gql`
     mutation {

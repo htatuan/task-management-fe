@@ -18,20 +18,16 @@ const AddTask = ({ onRefreshData }: AddTaskProps) => {
     formState: { errors },
   } = useForm<InputAddTaskForm>();
 
-  const { mutate } = useMutation(
-    (variables: { title: string; status: string; ownerId: number }) =>
-      addNewTask(variables.title, variables.status, variables.ownerId)
-  );
+  const { mutate:addTask } = addNewTask({});
 
   const onSubmitTaskForm: SubmitHandler<InputAddTaskForm> = async (
     dataForm
   ) => {
     console.log(dataForm);
-    mutate(
+    addTask(
       {
         title: dataForm.title,
         status: "TO DO",
-        ownerId: 1,
       },
       {
         onSuccess: () => {

@@ -9,33 +9,41 @@ import { ApiResponse } from "./api.response";
 import { useQuery } from "react-query";
 import callApi from "@/app/services/useGraphQL";
 import { gql } from "graphql-request";
+import useQueryCustom from "@/app/services/useQueryCustom";
+import { ref } from "yup";
+import { useFetchAllTasks } from "@/app/services/useRequest";
 
 const TaskManagement = () => {
   const [keyword, setKeyword] = useState<string | undefined>("");
   const [refresh, setRefresh] = useState<number>(1);
 
-  const { data, isFetching, status, error, refetch }: any = useQuery(
-    ["searchTask", keyword, refresh],
-    () => {
-      console.log("start call api with key=> ", keyword);
-      const allTasks = callApi().request(gql`
-        query {
-          data: searchTask(keyword: "${keyword}") {
-            id
-            status
-            title
-            createdAt
-          }
-        }
-      `);
-      return allTasks;
-    },
-    {
-      refetchOnWindowFocus: true,
-      staleTime: 0,
-      cacheTime: 0,
-      refetchInterval: 0,
-    }
+  // const { data, isFetching, status, error, refetch }: any = useQuery(
+  //   ["searchTask", keyword, refresh],
+  //   () => {
+  //     console.log("start call api with key=> ", keyword);
+  //     const allTasks = callApi().request(gql`
+  //       query {
+  //         data: searchTask(keyword: "${keyword}") {
+  //           id
+  //           status
+  //           title
+  //           createdAt
+  //         }
+  //       }
+  //     `);
+  //     return allTasks;
+  //   },
+  //   {
+  //     refetchOnWindowFocus: true,
+  //     staleTime: 0,
+  //     cacheTime: 0,
+  //     refetchInterval: 0,
+  //   }
+  // );
+  const { data, isFetching, status, error, refetch } = useFetchAllTasks(
+    "searchTask",
+    keyword,
+    refresh
   );
 
   let responseData: TaskModel[] = [];
