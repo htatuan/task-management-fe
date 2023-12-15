@@ -30,14 +30,10 @@ export default function useMutationCustom(
   console.log("see in useMutationCustom=> ", session);
   console.log("args => ", args);
 
-  // const { mutate } = useMutation((variables: { id: number; status: string }) =>
-  //   updateTask(variables.id, variables.status)
-  // );
 
-
-  const { mutate: addTask, isLoading, error }  = useMutation((variables: { title: string; status: string }) =>
+  const { mutate, isLoading, error }  = useMutation((variables: { title: string; status: string }) =>
      execute(session?.user.accessToken, variables.title, variables.status)
   );
 
-  return { mutate: addTask, isLoading, error };
+  return { mutate, isLoading, error };
 }
