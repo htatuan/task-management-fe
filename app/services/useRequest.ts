@@ -1,7 +1,6 @@
 import { gql } from "graphql-request";
-import callApi from "./useGraphQL";
 import useQueryCustom from "./useQueryCustom";
-import useMutationCustom from "./useMutationCustom";
+import callApi from "./useGraphQLClient";
 
 export const useRegister = async (
   username: string,
@@ -94,13 +93,12 @@ export const useFetchAllTasks = (
   return useQueryCustom(queryKey, queryStatement, ...args);
 };
 
-export const addNewTask = (data: { title: string; status: string }) => {
+export const addNewTask = (data: { title: string; status: string }): string => {
   return `mutation {
     createTask(
       createTaskInput: {
         title: "${data.title}"
         status: "${data.status}"
-        ownerId: 1
       }
     ) {
       id
@@ -111,31 +109,24 @@ export const addNewTask = (data: { title: string; status: string }) => {
 `;
 };
 
-export const updateTask = async (id: number, status: string): Promise<any> => {
-  return await callApi().request(
-    gql`
-    mutation {
-      updateTask(updateTaskInput:{
-        id: ${id},
-        status: "${status}"
-      }
-      ) {
-        id,
-        title,
-        status
-      }
+export const updateTask = (data: { id: number; status: string }): string => {
+  return `mutation {
+    updateTask(updateTaskInput:{
+      id: ${data.id},
+      status: "${data.status}"
     }
-    `,
-    { id, status }
-  );
+    ) {
+      id,
+      title,
+      status
+    }
+  }
+`;
 };
 
-export const deleteTask = async (taskId: number): Promise<any> => {
-  return await callApi().request(
-    gql`
-    mutation {
-      data:deleteTask(id:${taskId}) 
-    } `,
-    { taskId }
-  );
+export const deleteTask = (data: { id: number }): string => {
+  return `mutation {
+    data:deleteTask(id:${data.id}) 
+  }
+`;
 };

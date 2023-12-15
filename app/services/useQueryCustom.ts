@@ -1,8 +1,8 @@
 "use client";
-import callApi from "./useGraphQL";
 import { gql } from "graphql-request";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
+import callApi from "./useGraphQLClient";
 
 export default function useQueryCustom(
   queryKey: string,
@@ -10,7 +10,6 @@ export default function useQueryCustom(
   ...args: (string | number | undefined)[]
 ) {
   const { data: session } = useSession();
-  console.log("see in useQueryCustom=> ", session);
 
   const { isPending, isError, data, error } = useQuery({
     queryKey: [queryKey, ...args],

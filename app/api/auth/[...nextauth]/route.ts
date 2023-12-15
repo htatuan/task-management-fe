@@ -6,6 +6,7 @@ import { useLogin } from "@/app/services/useRequest";
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
+    maxAge: +process.env.NEXT_PUBLIC_SESSION_EXPIRATION_TIME
   },
   providers: [
     CredentialsProvider({
@@ -20,7 +21,6 @@ export const authOptions: NextAuthOptions = {
         }
         const res = await useLogin(credentials.username, credentials.password);
         if (res?.login) {
-          console.log("res?.login => ", res?.login);
           return { ...res?.login };
         }
 

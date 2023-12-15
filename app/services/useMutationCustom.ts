@@ -1,18 +1,18 @@
 "use client";
-import callApi from "./useGraphQL";
+import callApi from "./useGraphQLClient";
 import { gql } from "graphql-request";
 import { useSession } from "next-auth/react";
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 
 const useMutationCustom = (
   options: UseMutationOptions,
-  fnc: (data: any) => string
+  fnc: (params: any) => string
 ) => {
   const { data: session } = useSession();
 
   return useMutation({
-    mutationFn: async (data) => {
-      const graphQlStatement = fnc(data);
+    mutationFn: async (variables) => {
+      const graphQlStatement: string = fnc(variables);
       await callApi(session?.user.accessToken).request(
         gql`
           ${graphQlStatement}
@@ -24,4 +24,3 @@ const useMutationCustom = (
 };
 
 export default useMutationCustom;
-

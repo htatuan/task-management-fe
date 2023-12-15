@@ -6,6 +6,9 @@ import { useState } from "react";
 import { updateTask } from "@/app/services/useRequest";
 import DeleteTask from "./delete-task";
 import { toShortDateTimeString } from "@/utils/format-date";
+import useMutationCustom from "@/app/services/useMutationCustom";
+import { formatErrorResponse } from "@/utils/format-error";
+import { toast } from "react-toastify";
 
 interface TaskListProps {
   tasks: TaskModel[];
@@ -24,9 +27,15 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
     formState: { errors },
   } = useForm<InputEditTaskForm>();
 
-  // const { mutate } = useMutation((variables: { id: number; status: string }) =>
-  //   updateTask(variables.id, variables.status)
-  // );
+  const mutation = useMutationCustom({
+    onError: (error, variables, context) => {
+      toast.error(formatErrorResponse(error).message);
+    },
+    onSuccess: (data, variables, context) => {
+      onRefreshData();
+      setOpen(false);
+    },
+  }, updateTask);
 
   const deleteTask = async (task: TaskModel) => {
     setSelectedItem(task);
@@ -59,21 +68,7 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
   const onSubmitEditTaskForm: SubmitHandler<InputEditTaskForm> = async (
     dataForm
   ) => {
-    // mutate(
-    //   {
-    //     id: selectedItem.id,
-    //     status: dataForm.status,
-    //   },
-    //   {
-    //     onSuccess: () => {
-    //       onRefreshData();
-    //       setOpen(false);
-    //     },
-    //     onError: (errors) => {
-    //       console.log("error=> ", errors);
-    //     },
-    //   }
-    // );
+    mutation.mutate({ id: selectedItem.id, status: dataForm.status });
   };
 
   return (

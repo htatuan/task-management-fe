@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ReactQueryProvider } from "./react-query-provider";
-import { NextAuthProvider } from "./providers";
+import { CustomProvider } from "./providers";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-responsive-modal/styles.css";
@@ -23,17 +22,15 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-  console.log("session RootLayout=> ", session);
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <div className="container mx-auto">
-          <ReactQueryProvider>
-            <NextAuthProvider session={session as Session}>
-              {children}
-              <ToastContainer />
-            </NextAuthProvider>
-          </ReactQueryProvider>
+          <CustomProvider session={session as Session}>
+            {children}
+            <ToastContainer />
+          </CustomProvider>
         </div>
       </body>
     </html>

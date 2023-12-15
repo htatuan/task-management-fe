@@ -22,11 +22,9 @@ const AddTask = ({ onRefreshData }: AddTaskProps) => {
 
   const mutation = useMutationCustom({
     onError: (error, variables, context) => {
-      console.log("error");
       toast.error(formatErrorResponse(error).message);
     },
     onSuccess: (data, variables, context) => {
-      console.log("success");
       onRefreshData();
       setOpen(false);
     },
@@ -35,24 +33,7 @@ const AddTask = ({ onRefreshData }: AddTaskProps) => {
   const onSubmitTaskForm: SubmitHandler<InputAddTaskForm> = async (
     dataForm
   ) => {
-    console.log(dataForm);
     mutation.mutate({ title: dataForm.title, status: "TO DO" });
-    // addTask(
-    //   {
-    //     title: dataForm.title,
-    //     status: "TO DO",
-    //   },
-    //   {
-    //     onSuccess: () => {
-    //       console.log("success");
-    //       onRefreshData();
-    //       setOpen(false);
-    //     },
-    //     onError: (errors) => {
-    //       console.log("error=> ", errors);
-    //     },
-    //   }
-    // );
   };
 
   return (

@@ -9,9 +9,8 @@ import { useFetchAllTasks } from "@/app/services/useRequest";
 
 const TaskManagement = () => {
   const [keyword, setKeyword] = useState<string | undefined>("");
-  const [refresh, setRefresh] = useState<number>(1);
+  const [refresh, setRefresh] = useState<number>(Date.now());
 
-  
   const { isPending, isError, data, error } = useFetchAllTasks(
     "searchTask",
     keyword,
