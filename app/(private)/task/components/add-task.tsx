@@ -18,7 +18,9 @@ const AddTask = ({ onRefreshData }: AddTaskProps) => {
     formState: { errors },
   } = useForm<InputAddTaskForm>();
 
-  const { mutate:addTask } = addNewTask({});
+  const { mutate: addTask } = addNewTask(
+    {} as { title: string; status: string }
+  );
 
   const onSubmitTaskForm: SubmitHandler<InputAddTaskForm> = async (
     dataForm
