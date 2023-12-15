@@ -1,23 +1,35 @@
 "use client";
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useMutation } from "react-query";
 import Link from "next/link";
-import { useFormSchema } from "../register/useFormSchema";
 import { useForgotPassword } from "@/app/services/useRequest";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formatErrorResponse } from "@/utils/format-error";
+import { useMutation } from "@tanstack/react-query";
 
 const emailSchema: any = z.object({
   email: z.string().email(),
 });
 
 const ForgotPasswordForm = () => {
-  const { mutate } = useMutation((variables: { email: string }) =>
-    useForgotPassword(variables.email)
-  );
+
+  const mutation = useMutation({
+    mutationFn: (data: { email: string }) => useForgotPassword(data.email),
+    onError: (error, variables, context) => {
+      console.log("error=> ", error);
+      toast.error(formatErrorResponse(error).message);
+    },
+    onSuccess: (data, variables, context) => {
+      toast.success(
+        "Your forgot password request has been sent to your email!",
+        {
+          position: toast.POSITION.TOP_RIGHT,
+        }
+      );
+    },
+  });
 
   const {
     register,
@@ -29,24 +41,9 @@ const ForgotPasswordForm = () => {
   const onSubmitForgotPasswordForm: SubmitHandler<{ email: string }> = (
     dataForm
   ) => {
-    mutate(
-      {
-        email: dataForm.email,
-      },
-      {
-        onSuccess: () => {
-          toast.success(
-            "Your forgot password request has been sent to your email!",
-            {
-              position: toast.POSITION.TOP_RIGHT,
-            }
-          );
-        },
-        onError: (error: any) => {
-          toast.error(formatErrorResponse(error).message);
-        },
-      }
-    );
+    mutation.mutate({
+      email: dataForm.email,
+    });
   };
 
   return (

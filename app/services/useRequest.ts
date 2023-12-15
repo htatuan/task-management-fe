@@ -94,21 +94,21 @@ export const useFetchAllTasks = (
   return useQueryCustom(queryKey, queryStatement, ...args);
 };
 
-export const addNewTask = (variables:{title:string, status:string}) => {
-  const queryStatement = `mutation {
-        createTask(createTaskInput:{
-          title: "${variables.title}",
-          status: "${variables.status}"
-          ownerId: 1
-        }
-        ) {
-          id,
-          title,
-          status
-        }
-      }`;
-
-  return useMutationCustom(queryStatement, variables.title, variables.status, 1);
+export const addNewTask = (data: { title: string; status: string }) => {
+  return `mutation {
+    createTask(
+      createTaskInput: {
+        title: "${data.title}"
+        status: "${data.status}"
+        ownerId: 1
+      }
+    ) {
+      id
+      title
+      status
+    }
+  }
+`;
 };
 
 export const updateTask = async (id: number, status: string): Promise<any> => {

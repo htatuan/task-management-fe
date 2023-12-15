@@ -1,21 +1,17 @@
 "use client";
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useMutation } from "react-query";
 import Link from "next/link";
-import { useLogin } from "@/app/services/useRequest";
-import {signIn} from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { formatErrorResponse } from "@/utils/format-error";
 
 const LoginForm = () => {
   const { push } = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
-  const { mutate } = useMutation(
-    (variables: { username: string; password: string }) =>
-      useLogin(variables.username, variables.password)
-  );
-  
+
   const {
     register,
     handleSubmit,
@@ -31,12 +27,13 @@ const LoginForm = () => {
       callbackUrl,
     });
 
-    console.log("resssssss=> ", res)
+    console.log("resssssss=> ", res);
 
     if (!res?.error) {
       push(callbackUrl);
     } else {
-      console.log("error")
+      console.log("error=> ", res?.error);
+      toast.error("Wrong credentials provided!");
     }
   };
 

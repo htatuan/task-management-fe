@@ -1,18 +1,29 @@
 "use client";
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useMutation } from "react-query";
+import { SubmitHandler } from "react-hook-form";
 import { useRegister } from "@/app/services/useRequest";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useFormSchema } from "./useFormSchema";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { formatErrorResponse } from "@/utils/format-error";
 
 export function RegisterForm(): React.ReactElement {
   const { push } = useRouter();
-  const { mutate } = useMutation(
-    (variables: { username: string; email: string; password: string }) =>
-      useRegister(variables.username, variables.email, variables.password)
-  );
+
+  const mutation = useMutation({
+    mutationFn: (data: { username: string; email: string; password: string }) =>
+      useRegister(data.username, data.email, data.password),
+    onError: (error, variables, context) => {
+      console.log("error=> ", error);
+      toast.error(formatErrorResponse(error).message);
+    },
+    onSuccess: (data, variables, context) => {
+      console.log("success");
+      push("/login");
+    },
+  });
 
   const {
     form: { formState, register, reset, handleSubmit: handleSubmit },
@@ -20,22 +31,11 @@ export function RegisterForm(): React.ReactElement {
     getErrorMessage,
   } = useFormSchema();
   const onSubmitRegisterForm: SubmitHandler<InputRegisterForm> = (dataForm) => {
-    mutate(
-      {
-        username: dataForm.username,
-        email: dataForm.email,
-        password: dataForm.password,
-      },
-      {
-        onSuccess: () => {
-          console.log("success");
-          push("/login");
-        },
-        onError: (errors) => {
-          console.log("error=> ", errors);
-        },
-      }
-    );
+    mutation.mutate({
+      username: dataForm.username,
+      email: dataForm.email,
+      password: dataForm.password,
+    });
   };
 
   return (

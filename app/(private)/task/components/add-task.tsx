@@ -1,8 +1,10 @@
+import useMutationCustom from "@/app/services/useMutationCustom";
 import { addNewTask } from "@/app/services/useRequest";
+import { formatErrorResponse } from "@/utils/format-error";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useMutation } from "react-query";
 import { Modal } from "react-responsive-modal";
+import { toast } from "react-toastify";
 
 interface AddTaskProps {
   onRefreshData: () => void;
@@ -18,30 +20,39 @@ const AddTask = ({ onRefreshData }: AddTaskProps) => {
     formState: { errors },
   } = useForm<InputAddTaskForm>();
 
-  const { mutate: addTask } = addNewTask(
-    {} as { title: string; status: string }
-  );
+  const mutation = useMutationCustom({
+    onError: (error, variables, context) => {
+      console.log("error");
+      toast.error(formatErrorResponse(error).message);
+    },
+    onSuccess: (data, variables, context) => {
+      console.log("success");
+      onRefreshData();
+      setOpen(false);
+    },
+  }, addNewTask);
 
   const onSubmitTaskForm: SubmitHandler<InputAddTaskForm> = async (
     dataForm
   ) => {
     console.log(dataForm);
-    addTask(
-      {
-        title: dataForm.title,
-        status: "TO DO",
-      },
-      {
-        onSuccess: () => {
-          console.log("success");
-          onRefreshData();
-          setOpen(false);
-        },
-        onError: (errors) => {
-          console.log("error=> ", errors);
-        },
-      }
-    );
+    mutation.mutate({ title: dataForm.title, status: "TO DO" });
+    // addTask(
+    //   {
+    //     title: dataForm.title,
+    //     status: "TO DO",
+    //   },
+    //   {
+    //     onSuccess: () => {
+    //       console.log("success");
+    //       onRefreshData();
+    //       setOpen(false);
+    //     },
+    //     onError: (errors) => {
+    //       console.log("error=> ", errors);
+    //     },
+    //   }
+    // );
   };
 
   return (

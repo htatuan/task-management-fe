@@ -1,8 +1,8 @@
 "use client";
-import { useQuery } from "react-query";
 import callApi from "./useGraphQL";
 import { gql } from "graphql-request";
 import { useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
 
 export default function useQueryCustom(
   queryKey: string,
@@ -12,9 +12,9 @@ export default function useQueryCustom(
   const { data: session } = useSession();
   console.log("see in useQueryCustom=> ", session);
 
-  const { data, isFetching, status, error, refetch } = useQuery(
-    [queryKey, ...args],
-    async () => {
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: [queryKey, ...args],
+    queryFn: async () => {
       const data = await callApi(session?.user.accessToken).request(
         gql`
           ${queryStatement}
@@ -22,13 +22,7 @@ export default function useQueryCustom(
       );
       return data;
     },
-    {
-      refetchOnWindowFocus: true,
-      staleTime: 0,
-      cacheTime: 0,
-      refetchInterval: 0,
-    }
-  );
+  });
 
-  return { data, isFetching, status, error, refetch };
+  return { isPending, isError, data, error };
 }

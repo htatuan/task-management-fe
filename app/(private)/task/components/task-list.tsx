@@ -1,7 +1,6 @@
 "use client";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { TaskModel } from "./task.model";
-import { useMutation } from "react-query";
 import Modal from "react-responsive-modal";
 import { useState } from "react";
 import { updateTask } from "@/app/services/useRequest";
@@ -25,9 +24,9 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
     formState: { errors },
   } = useForm<InputEditTaskForm>();
 
-  const { mutate } = useMutation((variables: { id: number; status: string }) =>
-    updateTask(variables.id, variables.status)
-  );
+  // const { mutate } = useMutation((variables: { id: number; status: string }) =>
+  //   updateTask(variables.id, variables.status)
+  // );
 
   const deleteTask = async (task: TaskModel) => {
     setSelectedItem(task);
@@ -60,21 +59,21 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
   const onSubmitEditTaskForm: SubmitHandler<InputEditTaskForm> = async (
     dataForm
   ) => {
-    mutate(
-      {
-        id: selectedItem.id,
-        status: dataForm.status,
-      },
-      {
-        onSuccess: () => {
-          onRefreshData();
-          setOpen(false);
-        },
-        onError: (errors) => {
-          console.log("error=> ", errors);
-        },
-      }
-    );
+    // mutate(
+    //   {
+    //     id: selectedItem.id,
+    //     status: dataForm.status,
+    //   },
+    //   {
+    //     onSuccess: () => {
+    //       onRefreshData();
+    //       setOpen(false);
+    //     },
+    //     onError: (errors) => {
+    //       console.log("error=> ", errors);
+    //     },
+    //   }
+    // );
   };
 
   return (
