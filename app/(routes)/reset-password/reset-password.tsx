@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useResetPassword } from "../../services/useRequest";
 import { useRouter } from "next/navigation";
 import { formatErrorResponse } from "@/app/utils/format-error";
+import { useMutation } from "@tanstack/react-query";
 
 const formSchema: any = z
   .object({
@@ -33,10 +34,6 @@ const ResetPassword = ({
 }: {
   forgotPasswordToken: string;
 }) => {
-  const { mutate, isLoading } = useMutation(
-    (variables: { forgotPasswordToken: string; password: string }) =>
-      useResetPassword(variables.forgotPasswordToken, variables.password)
-  );
   const { push } = useRouter();
   const {
     register,
@@ -48,29 +45,26 @@ const ResetPassword = ({
   const [show, setShow] = useState(false);
   const [confirmPasswordshow, setconfirmPasswordshow] = useState(false);
 
-  const onSubmit = async (data: ResetPasswordSchema): Promise<void> => {
-    try {
-      mutate(
-        {
-          forgotPasswordToken: forgotPasswordToken,
-          password: data.password,
-        },
-        {
-          onSuccess: (data) => {
-            console.log(data);
-            toast.success("Password updated successfully!", {
-              position: toast.POSITION.TOP_CENTER,
-            });
-            push("/login");
-          },
-          onError: (error: any) => {
-            toast.error(formatErrorResponse(error).message);
-          },
-        }
-      );
-    } catch (error: any) {
-      toast.error(error.message);
-    }
+  const mutation = useMutation({
+    mutationFn: (data: { forgotPasswordToken: string; password: string }) =>
+      useResetPassword(data.forgotPasswordToken, data.password),
+    onError: (error, variables, context) => {
+      console.log("error=> ", error);
+      toast.error(formatErrorResponse(error).message);
+    },
+    onSuccess: (data, variables, context) => {
+      toast.success("Password updated successfully!", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      push("/login");
+    },
+  });
+
+  const onSubmit = (data: ResetPasswordSchema) => {
+    mutation.mutate({
+      forgotPasswordToken: forgotPasswordToken,
+      password: data.password,
+    });
   };
 
   return (
@@ -138,7 +132,7 @@ const ResetPassword = ({
           <div className={"flex w-full items-center justify-around"}>
             <button
               type="submit"
-              disabled={isSubmitting || isLoading}
+              disabled={isSubmitting || mutation.isLoading}
               className={"rounded-md border p-2 bg-blue-500 text-white mt-5"}
             >
               Submit
