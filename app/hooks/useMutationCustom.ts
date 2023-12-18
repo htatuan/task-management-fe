@@ -1,5 +1,5 @@
 "use client";
-import callApi from "./useGraphQLClient";
+import callApi from "../services/useGraphQLClient";
 import { gql } from "graphql-request";
 import { useSession } from "next-auth/react";
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";

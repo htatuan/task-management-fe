@@ -6,7 +6,7 @@ import { useForgotPassword } from "@/app/services/useRequest";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { formatErrorResponse } from "@/utils/format-error";
+import { formatErrorResponse } from "@/app/utils/format-error";
 import { useMutation } from "@tanstack/react-query";
 
 const emailSchema: any = z.object({

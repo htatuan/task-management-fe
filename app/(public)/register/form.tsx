@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useFormSchema } from "./useFormSchema";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { formatErrorResponse } from "@/utils/format-error";
+import { formatErrorResponse } from "@/app/utils/format-error";
 
 export function RegisterForm(): React.ReactElement {
   const { push } = useRouter();

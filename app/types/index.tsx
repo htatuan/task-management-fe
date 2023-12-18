@@ -10,3 +10,14 @@ type InputAddTaskForm = {
 type InputEditTaskForm = {
   status: string;
 };
+
+type InputRegisterForm = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+type SearchInputForm = {
+  keyword?: string;
+};
+

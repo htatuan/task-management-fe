@@ -2,7 +2,7 @@
 import { gql } from "graphql-request";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
-import callApi from "./useGraphQLClient";
+import callApi from "../services/useGraphQLClient";
 
 export default function useQueryCustom(
   queryKey: string,

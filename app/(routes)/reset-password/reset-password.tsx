@@ -5,10 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { useMutation } from "react-query";
 import { useResetPassword } from "../../services/useRequest";
 import { useRouter } from "next/navigation";
-import { formatErrorResponse } from "@/utils/format-error";
+import { formatErrorResponse } from "@/app/utils/format-error";
 
 const formSchema: any = z
   .object({

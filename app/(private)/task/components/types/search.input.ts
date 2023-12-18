@@ -1,3 +1,0 @@
-type SearchInputForm = {
-  keyword?: string;
-};

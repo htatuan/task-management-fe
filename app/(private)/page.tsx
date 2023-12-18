@@ -1,5 +1,5 @@
 import React from "react";
-import TaskManagement from "./task/components/task-management";
+import TaskManagement from "./dashboard/components/TaskManagement";
 
 const Homepage = async () => {
   console.log("aaf");

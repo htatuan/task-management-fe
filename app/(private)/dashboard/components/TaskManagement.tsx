@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import AddTask from "./add-task";
-import SearchForm from "./search-form";
-import TaskList from "./task-list";
-import { TaskModel } from "./task.model";
-import { ApiResponse } from "./api.response";
+import AddTask from "./AddTask";
+import SearchForm from "./SearchForm";
+import TaskList from "./TaskList";
+import { TaskModel } from "../../../types/task.model";
+import { ApiResponse } from "../../../types/api.response";
 import { useFetchAllTasks } from "@/app/services/useRequest";
 
 const TaskManagement = () => {

@@ -1,5 +1,5 @@
 import { gql } from "graphql-request";
-import useQueryCustom from "./useQueryCustom";
+import useQueryCustom from "../hooks/useQueryCustom";
 import callApi from "./useGraphQLClient";
 
 export const useRegister = async (

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { formatErrorResponse } from "@/utils/format-error";
+import { formatErrorResponse } from "@/app/utils/format-error";
 
 const LoginForm = () => {
   const { push } = useRouter();

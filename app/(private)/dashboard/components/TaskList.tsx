@@ -1,13 +1,13 @@
 "use client";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { TaskModel } from "./task.model";
+import { TaskModel } from "../../../types/task.model";
 import Modal from "react-responsive-modal";
 import { useState } from "react";
 import { updateTask } from "@/app/services/useRequest";
-import DeleteTask from "./delete-task";
-import { toShortDateTimeString } from "@/utils/format-date";
-import useMutationCustom from "@/app/services/useMutationCustom";
-import { formatErrorResponse } from "@/utils/format-error";
+import DeleteTask from "./DeleteTask";
+import { toShortDateTimeString } from "@/app/utils/format-date";
+import useMutationCustom from "@/app/hooks/useMutationCustom";
+import { formatErrorResponse } from "@/app/utils/format-error";
 import { toast } from "react-toastify";
 
 interface TaskListProps {

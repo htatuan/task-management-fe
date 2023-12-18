@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useFormSchema } from "./types/searchFormSchema";
+import { useFormSchema } from "./searchFormSchema";
 
 interface SearchProps {
   onSearch: (keyword?: string) => void;
