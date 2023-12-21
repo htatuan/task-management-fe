@@ -1,4 +1,4 @@
-import ResetPassword from "./reset-password";
+import ResetPassword from "./form";
 
 const Page = ({
   searchParams,

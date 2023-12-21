@@ -27,15 +27,18 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
     formState: { errors },
   } = useForm<InputEditTaskForm>();
 
-  const mutation = useMutationCustom({
-    onError: (error, variables, context) => {
-      toast.error(formatErrorResponse(error).message);
+  const mutation = useMutationCustom(
+    {
+      onError: (error, variables, context) => {
+        toast.error(formatErrorResponse(error).message);
+      },
+      onSuccess: (data, variables, context) => {
+        onRefreshData();
+        setOpen(false);
+      },
     },
-    onSuccess: (data, variables, context) => {
-      onRefreshData();
-      setOpen(false);
-    },
-  }, updateTask);
+    updateTask
+  );
 
   const deleteTask = async (task: TaskModel) => {
     setSelectedItem(task);
@@ -140,7 +143,11 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
                     onClick={async () => {
                       await deleteTask(task);
                     }}
-                    className="py-2 px-2 bg-red-500 text-white rounded rounded-full hover:bg-gray-700 "
+                    className={
+                      task.status == "ARCHIVED"
+                        ? "py-2 px-2 bg-red-500 text-white rounded rounded-full hover:bg-gray-700 opacity-50 cursor-not-allowed"
+                        : "py-2 px-2 bg-red-500 text-white rounded rounded-full hover:bg-gray-700"
+                    }
                   >
                     <i className="fas fa-times"></i> Delete
                   </button>
