@@ -143,11 +143,9 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
                     onClick={async () => {
                       await deleteTask(task);
                     }}
-                    className={
-                      task.status == "ARCHIVED"
-                        ? "py-2 px-2 bg-red-500 text-white rounded rounded-full hover:bg-gray-700 opacity-50 cursor-not-allowed"
-                        : "py-2 px-2 bg-red-500 text-white rounded rounded-full hover:bg-gray-700"
-                    }
+                    className={`py-2 px-2 ${
+                      task.status == "ARCHIVED" ? "bg-gray-500 opacity-50 cursor-not-allowed" : "bg-red-500"
+                    }  text-white rounded rounded-full hover:bg-gray-700`}
                   >
                     <i className="fas fa-times"></i> Delete
                   </button>
