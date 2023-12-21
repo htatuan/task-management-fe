@@ -20,7 +20,7 @@ export function RegisterForm(): React.ReactElement {
       toast.error(formatErrorResponse(error).message);
     },
     onSuccess: (data, variables, context) => {
-      console.log("success");
+      toast.success("Registered successfully");
       push("/login");
     },
   });

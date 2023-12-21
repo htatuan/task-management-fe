@@ -115,12 +115,12 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
                 >
                   {task.title}
                 </th>
-                <td
-                  className={`px-6 py-1 w-10 ${progressStatusStyle(
-                    task.status
-                  )}`}
-                >
-                  {task.status}
+                <td>
+                  <div
+                    className={` w-full ${progressStatusStyle(task.status)}`}
+                  >
+                    {task.status}
+                  </div>
                 </td>
                 <td className="px-12 py-1 text-center ">
                   {toShortDateTimeString(task.createdAt)}
@@ -128,7 +128,7 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
                 <td className="px-6 py-1">
                   <button
                     type="button"
-                    className="py-2 px-2 bg-orange-500 text-white rounded rounded-full hover:bg-blue-700 mr-2"
+                    className="py-2 px-2 bg-orange-500 text-white w-20 rounded rounded-full hover:bg-blue-700 mr-2"
                     onClick={() => {
                       setSelectedItem(task);
                       setValue("status", task.status);
@@ -144,8 +144,10 @@ const TaskList = ({ tasks, onRefreshData }: TaskListProps) => {
                       await deleteTask(task);
                     }}
                     className={`py-2 px-2 ${
-                      task.status == "ARCHIVED" ? "bg-gray-500 opacity-50 cursor-not-allowed" : "bg-red-500"
-                    }  text-white rounded rounded-full hover:bg-gray-700`}
+                      task.status == "ARCHIVED"
+                        ? "bg-gray-500 opacity-50 cursor-not-allowed"
+                        : "bg-red-500"
+                    }  text-white rounded rounded-full w-20 hover:bg-gray-700`}
                   >
                     <i className="fas fa-times"></i> Delete
                   </button>
